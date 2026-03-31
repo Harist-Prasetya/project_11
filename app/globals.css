@@ -2,26 +2,256 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Base Reset ────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050505;
+  --surface: #0a0a0a;
+  --surface-light: #141414;
+  --accent-red: #E03030;
+  --accent-purple: #7B2FBE;
+  --text-heading: rgba(255, 255, 255, 0.9);
+  --text-body: rgba(255, 255, 255, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.35);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto; /* framer motion handles scroll */
 }
 
 body {
-  color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* ── Scrollbar ──────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Loading Screen ─────────────────────────────── */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.8s;
+}
+
+.loading-screen.loaded {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader-ring {
+  width: 60px;
+  height: 60px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-top-color: var(--accent-red);
+  border-right-color: var(--accent-purple);
+  border-radius: 50%;
+  animation: loaderSpin 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+}
+
+@keyframes loaderSpin {
+  to {
+    transform: rotate(360deg);
   }
+}
+
+.loader-progress {
+  margin-top: 24px;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.loader-bar-track {
+  margin-top: 16px;
+  width: 200px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.loader-bar-fill {
+  height: 100%;
+  border-radius: 1px;
+  background: linear-gradient(90deg, var(--accent-red), var(--accent-purple));
+  transition: width 0.3s ease-out;
+}
+
+/* ── Glass Effect ───────────────────────────────── */
+.glass {
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-subtle {
+  background: rgba(10, 10, 10, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ── Canvas Container ───────────────────────────── */
+.scroll-canvas-container {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.scroll-canvas {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+}
+
+/* ── Text Overlay Base ──────────────────────────── */
+.text-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.text-overlay-content {
+  max-width: 600px;
+  pointer-events: auto;
+}
+
+/* ── Gradient Text ──────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.4)) drop-shadow(0 0 30px rgba(255, 255, 255, 0.2));
+}
+
+.gradient-text-accent {
+  background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(224, 48, 48, 0.5)) drop-shadow(0 0 40px rgba(123, 47, 190, 0.4));
+}
+
+/* ── CTA Button ─────────────────────────────────── */
+.cta-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 40px;
+  background: linear-gradient(135deg, var(--accent-red), var(--accent-purple));
+  color: white;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 60px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s ease;
+}
+
+.cta-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(224, 48, 48, 0.3),
+              0 0 80px rgba(123, 47, 190, 0.2);
+}
+
+.cta-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.cta-button:hover::after {
+  opacity: 1;
+}
+
+/* ── Divider Line ───────────────────────────────── */
+.accent-line {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-red), var(--accent-purple));
+  border-radius: 1px;
+}
+
+/* ── Footer ─────────────────────────────────────── */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+}
+
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* ── Noise Overlay ──────────────────────────────── */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
 }
