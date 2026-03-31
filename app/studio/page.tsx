@@ -49,7 +49,7 @@ export default function StudioPage() {
               every frame rendered is an intentional pursuit of atmospheric perfection.
             </p>
             <p className="text-white/50 leading-relaxed text-lg">
-              We don't believe in minimum viable products. We believe in maximum 
+              We don&apos;t believe in minimum viable products. We believe in maximum 
               impact experiences that leave users in awe.
             </p>
           </div>

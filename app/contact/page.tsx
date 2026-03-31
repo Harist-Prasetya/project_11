@@ -23,12 +23,12 @@ export default function ContactPage() {
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 leading-[1.05] gradient-text-accent">
-              Let's create <br/> something <br/> extraordinary.
+              Let&apos;s create <br/> something <br/> extraordinary.
             </h1>
             
             <p className="text-white/50 text-xl leading-relaxed mb-12 max-w-md">
               Whether you have a fully formed brief or just a fragment of an idea, 
-              we're ready to visualize it.
+              we&apos;re ready to visualize it.
             </p>
 
             <div className="flex flex-col gap-8 text-sm">

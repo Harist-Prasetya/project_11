@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, useCallback } from "react";
-import { useScroll, useTransform, motion, useMotionValueEvent } from "framer-motion";
+import { useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 
 const TOTAL_FRAMES = 750;
 const FRAME_PATH = "/frames/Main_00";
